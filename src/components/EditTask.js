@@ -1,6 +1,7 @@
 import React from 'react';
 
 function EditTask({ editText, setEditText, updateTask, taskIndex }) {
+  
   return (
     <div style={{ textAlign: 'left', marginTop: '50px' }}>
       <h1 style={{ border: 'solid', width: '250px', textAlign: 'center', marginLeft: '550px' }}>Edit Task</h1>

@@ -1,94 +1,94 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import TaskList from './components/TaskList';
 import AddTask from './components/AddTask';
-import EditTask from './components/EditTask';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import EditTaskComponent from './components/EditTaskComponent';
 
 function App() {
   const [tasks, setTasks] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [editText, setEditText] = useState('');
 
- 
-  const addTask = () => {
-    if (inputValue.trim()) {
-      setTasks([...tasks, { text: inputValue, completed: false }]);
-      setInputValue('');
-    }
-  };
-
   
-  const toggleTask = (index) => {
-    const newTasks = [...tasks];
-    newTasks[index].completed = !newTasks[index].completed;
-    setTasks(newTasks);
+  const appLayoutStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh',
   };
 
-  const deleteTask = (index) => {
-    const newTasks = tasks.filter((_, taskIndex) => taskIndex !== index);
-    setTasks(newTasks);
+  const mainContentStyle = {
+    marginLeft: '200px', 
+    padding: '20px', 
+    flex: '1', 
+    overflowY: 'auto', 
   };
 
-  
-  const startEditing = (index) => {
-    setEditText(tasks[index].text);
+  const sidebarStyle = {
+    height: '100%', 
+    width: '200px',
+    backgroundColor: '#000',
+    position: 'fixed',
+    top: '168px', 
+    left: 0,
+    paddingTop: '20px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    boxShadow: '2px 0 5px rgba(0, 0, 0, 0.2)',
   };
 
- 
-  const updateTask = (index) => {
-    const newTasks = [...tasks];
-    newTasks[index].text = editText;
-    setTasks(newTasks);
-  };
+  const linkStyle = {
+    color: 'white',
+    textDecoration: 'none',
+    marginBottom: '20px',
+    fontSize: '18px',
+    border: '1px solid rgba(255, 255, 255, 0.5)', 
+    borderRadius: '5px',
+    padding: '10px 15px', 
+    backgroundColor: 'rgba(255, 255, 255, 0.1)', 
+    transition: 'background-color 0.3s, transform 0.2s', 
+    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)', 
+};
+
 
   return (
     <Router>
-      <nav  style={{ textAlign: 'center',height:'50px',backgroundColor:'black' }}>
-        <Link to="/" style={{ marginRight: '20px',color:'white' }}>View Saved Task</Link>
-        <Link to="/add-task" style={{color:'white' }}>Add Task</Link>
-      </nav>
+      <div style={appLayoutStyle}>
+        <Header />
 
-      <Routes>
-        <Route
-          path="/"
-          element={<TaskList tasks={tasks} toggleTask={toggleTask} startEditing={startEditing} deleteTask={deleteTask} />}
-        />
-        <Route
-          path="/add-task"
-          element={<AddTask inputValue={inputValue} setInputValue={setInputValue} addTask={addTask} />}
-        />
-        <Route
-          path="/edit-task/:index"
-          element={<EditTaskComponent tasks={tasks} setEditText={setEditText} editText={editText} updateTask={updateTask} />}
-        />
-      </Routes>
+        
+        <nav style={sidebarStyle}>
+          <Link to="/" style={linkStyle}>
+            View Saved Tasks
+          </Link>
+          <Link to="/add-task" style={linkStyle}>
+            Add Task
+          </Link>
+        </nav>
+
+        
+        <div style={mainContentStyle}>
+          <Routes>
+            <Route
+              path="/"
+              element={<TaskList tasks={tasks} setEditText={setEditText} setTasks={setTasks} />}
+            />
+            <Route
+              path="/add-task"
+              element={<AddTask inputValue={inputValue} setInputValue={setInputValue} setTasks={setTasks} tasks={tasks} />}
+            />
+            <Route
+              path="/edit-task/:index"
+              element={<EditTaskComponent tasks={tasks} setEditText={setEditText} editText={editText} setTasks={setTasks} />}
+            />
+          </Routes>
+        </div>
+
+        <Footer />
+      </div>
     </Router>
-  );
-}
-
-
-function EditTaskComponent({ tasks, setEditText, editText, updateTask }) {
-  const { index } = useParams();
-  const navigate = useNavigate();
-
-  const taskIndex = parseInt(index);
-
-  
-  React.useEffect(() => {
-    if (tasks[taskIndex]) {
-      setEditText(tasks[taskIndex].text);
-    }
-  }, [taskIndex, tasks, setEditText]);
-
-  return (
-    <EditTask
-      editText={editText}
-      setEditText={setEditText}
-      updateTask={(index) => {
-        updateTask(taskIndex);
-        navigate('/');
-      }}
-    />
   );
 }
 

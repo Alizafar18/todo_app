@@ -1,10 +1,30 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function TaskList({ tasks, toggleTask, startEditing, deleteTask }) {
+
+function TaskList({ tasks,setEditText,setTasks }) {
+
+  const toggleTask = (index) => {
+    const newTasks = [...tasks];
+    newTasks[index].completed = !newTasks[index].completed;
+    setTasks(newTasks);
+  };
+
+  const deleteTask = (index) => {
+    const newTasks = tasks.filter((_, taskIndex) => taskIndex !== index);
+    setTasks(newTasks);
+  };
+
+  
+  const startEditing = (index) => {
+    setEditText(tasks[index].text);
+  };
+
+
+
   return (
     <div style={{ textAlign: 'left', marginTop: '50px' }}>
-      <h1 style={{ width: '250px', textAlign: 'center', marginLeft: '550px' }}>Task List</h1>
+      <h1 style={{ width: '250px', textAlign: 'center', marginLeft: '400px' }}>Task List</h1>
    
       <ul style={{ listStyle: 'none', padding: 0, width: '95%', marginLeft: '40px', textAlign: 'left'}}>
         {tasks.map((task, index) => (
@@ -23,14 +43,29 @@ function TaskList({ tasks, toggleTask, startEditing, deleteTask }) {
              transition: 'background-color 0.3s ease' }}><span onClick={() => toggleTask(index)} style={{ cursor: 'pointer' }}>
               {task.text}
             </span></div>
-            <div style={{marginLeft:'90.3%'}}>
-            <button onClick={() => startEditing(index)} style={{ marginLeft: '10px',backgroundColor:'grey',alignContent:'left',borderRadius:'8px' }}>
-              <Link to={`/edit-task/${index}`} style={{ textDecoration: 'none',color:'white' }}>Edit</Link>
-            </button>
-            <button onClick={() => deleteTask(index)} style={{ marginLeft: '10px',backgroundColor:'grey',color:'white',borderRadius:'4px'  }}>
-              Delete
-            </button>
-            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+  <button onClick={() => startEditing(index)} style={{
+    backgroundColor: 'grey',
+    borderRadius: '8px',
+    padding: '8px 12px',
+    border: 'none',
+    cursor: 'pointer'
+  }}>
+    <Link to={`/edit-task/${index}`} style={{ textDecoration: 'none', color: 'white' }}>Edit</Link>
+  </button>
+  
+  <button onClick={() => deleteTask(index)} style={{
+    backgroundColor: 'grey',
+    color: 'white',
+    borderRadius: '4px',
+    padding: '8px 12px',
+    border: 'none',
+    cursor: 'pointer'
+  }}>
+    Delete
+  </button>
+</div>
+
           </li>
         ))}
       </ul>

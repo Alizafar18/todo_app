@@ -1,9 +1,17 @@
 import React from 'react';
 
-function AddTask({ inputValue, setInputValue, addTask }) {
+function AddTask({ tasks,inputValue, setInputValue, setTasks}) {
+
+  const addTask = () => {
+    if (inputValue.trim()) {
+      setTasks([...tasks, { text: inputValue, completed: false }]);
+      setInputValue('');
+    }
+  };
+  
   return (
     <div style={{ textAlign: 'left', marginTop: '50px' }}>
-      <h1 style={{ width: '250px', textAlign: 'center', marginLeft: '550px' }}>Add Task</h1>
+      <h1 style={{ width: '250px', textAlign: 'center', marginLeft: '400px' }}>Add Task</h1>
 
       <input
         value={inputValue}
